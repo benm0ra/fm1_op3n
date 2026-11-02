@@ -1,4 +1,76 @@
-# FM1 Open V14
+# FM1 OP3N
+
+A kid-friendly 4-track groovebox firmware for the M-VAVE FM1 pocket synth: drums, bass, lead and a magic arp, four big knobs, animated screens and a hard volume cap.
+
+FM1 OP3N replaces the FM1's stock panel app. It builds on [FM1 Open V14](https://github.com/m-vave/fm1_open) by M-VAVE, so M-VAVE's FM engine still makes every sound. FM1 OP3N turns the instrument into something a 7-year-old can play straight away.
+
+![The four FM1 OP3N screens](docs/op3n-screens.png)
+
+> [!WARNING]
+> **Status: early, not yet tested on hardware.** It runs and passes its tests on M-VAVE's open simulator engine and in the browser workbench. It has not been flashed to a real FM1 yet.
+>
+> **Calibrate the volume ceiling before a child uses it.** The hard output cap in `app/audio_output.c` is a placeholder at −6 dBFS. Measure the real device with the loudest headphones you expect, using an SPL meter or ear simulator, and lower `OPM_CEILING_Q23` until the worst case meets your target (85 dB(A) is the usual limit for children's headphones).
+
+## Try it in your browser
+
+Download [`docs/op3n-preview.html`](docs/op3n-preview.html) and open it in a desktop browser. It's M-VAVE's FM1 workbench with FM1 OP3N inside, running on a virtual FM1 panel with sound. Nothing is sent to a device.
+
+## What it does
+
+| Track | Sound | Screen | TWIST knob |
+|-------|-------|--------|------------|
+| DRUMS | 808 kit, keys are drum pads | Spinning cassette | Distortion |
+| BASS | 303 bass | Submarine depth gauge | Drive |
+| LEAD | DX7 6-operator lead | Rocket with thruster flame | Vibrato wobble |
+| MAGIC | DX7 kalimba + arpeggiator | Robot whose eyes dance to the arp | Arp speed |
+
+- **Four macro knobs per track:** PUNCH (attack and snap), COLOR (brightness), SPACE (reverb and echo) and TWIST. Each one moves real engine parameters.
+- **Scale-locked keys:** C pentatonic or C major, so every key sounds good. In-scale keys light up.
+- **Easy sequencing:** PLAY, REC, and hold SEQ to toggle the 16 steps on the white keys. Hold FX for an echo fill.
+- **Hard output ceiling:** applied after every audio source is mixed in, including USB and Bluetooth audio.
+
+![Knobs at neutral (left) and turned (right)](docs/op3n-knobs.png)
+
+| Control | Does |
+|---------|------|
+| SELECT | Choose the track |
+| KNOB 1–4 | PUNCH, COLOR, SPACE, TWIST |
+| PRESETS | Tempo |
+| PLAY / REC / ARP | Start-stop, record, arpeggiator |
+| SEL (SCL) | Pentatonic or major |
+| OCT− / OCT+ | Octave |
+| FX (hold) | Echo fill |
+| SEQ (hold) + white keys | Edit steps |
+
+## Build, test and flash
+
+All the details are in [OP3N.md](OP3N.md). In short:
+
+- **PC test (Linux/macOS):** compile `tools/op3n_host_test.c` against the open simulator engine. It runs 25 checks and writes screenshots and a demo WAV.
+- **Browser preview:** use `tools/Build-Web.ps1 -LocalPreview` on Windows, or the WASI command in OP3N.md and `tools/build_web_preview.py` on Linux/macOS.
+- **Firmware (Windows):** install JieLi toolchain 2.5.3 and run `./sdk/Build.ps1 -FirmwareOnly -Toolchain 'C:\JL\pi32'`. Flash it with the FM1 workbench after backing up your projects. You can return to the official firmware from the same workbench.
+
+## Layout
+
+```
+app/screen.c          FM1 OP3N app (replaces the stock UI, kept as app/op3n/stock_screen.c.orig)
+app/op3n/             macro mapping, screens, band rasterizer
+app/audio_output.c    + hard output ceiling
+tools/                host test and Linux/macOS preview builder
+docs/                 screenshots and browser preview
+```
+
+## License and credits
+
+The app code, including FM1 OP3N, is GPLv3 with the FM1 SDK linking exception; see [LICENSE.md](LICENSE.md). M-VAVE's binary engine (`sdk/lib/libfm1_engine.a`) and the other SDK components keep their own terms in [THIRD_PARTY.md](THIRD_PARTY.md); the engine is licensed for M-VAVE FM1 devices only.
+
+FM1 OP3N is an independent community project. It is not affiliated with or endorsed by M-VAVE. The visual style is inspired by the flat, line-art look of classic pocket synth interfaces.
+
+---
+
+# Upstream: FM1 Open V14 (M-VAVE)
+
+*The original M-VAVE README follows (only this heading was changed).*
 
 English · [简体中文](README.zh-CN.md)
 
